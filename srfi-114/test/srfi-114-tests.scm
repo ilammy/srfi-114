@@ -1,4 +1,4 @@
-(import (chibi) (chibi test) (scheme inexact) (srfi 114))
+(import (chibi) (chibi test) (scheme inexact) (srfi 114) (srfi 114 default-comparator))
 
 (test-begin "srfi-114")
 
@@ -79,7 +79,6 @@
   (test #t (<? bytevector-comparator #u8(1 2 3) #u8(1 2 4))))
 
 (test-group "The default comparator"
-  ; TODO: extend default-comparator to sets and bags from SRFI 113
   (test #t (<? default-comparator '() '(a . d) '#false #\space "string" 'zorro 42 #(9) #u8() cons))
   (test #t (>? default-comparator cons #u8() #(9) 42 'zorro "string" #\space '#false '(a . d) '()))
   (test #t (<? default-comparator '(a . 1) '(a . 2)))
@@ -114,10 +113,44 @@
   (test #t (<? default-comparator #u8(1 2 3) #u8(1 2 4)))
   (test #t (<? default-comparator 'symbol symbol?))
   (test #t (=? default-comparator symbol? cons +))
+
   (define Foo (register-simple-type "Foo" #f 0))
   (define make-foo (make-constructor "make-foo" Foo))
+  (define foo? (make-type-predicate "foo?" Foo))
+
+  (define Bar (register-simple-type "Bar" #f 0))
+  (define make-bar (make-constructor "make-bar" Bar))
+  (define bar? (make-type-predicate "bar?" Bar))
+
   (test #t (<? default-comparator #u8() (make-foo)))
-  (test #t (=? default-comparator (make-foo) (make-foo))))
+  (test #t (<? default-comparator #u8() (make-bar)))
+  (test #t (=? default-comparator (make-foo) (make-foo)))
+  (test #t (=? default-comparator (make-foo) (make-bar)))
+  (test #t (=? default-comparator (make-bar) (make-bar)))
+  (test #t (=? default-comparator (make-foo) cons))
+  (test #t (=? default-comparator (make-bar) cons))
+  (test #f (<? default-comparator (make-foo) (make-bar)))
+  (test #f (<? default-comparator (make-bar) (make-foo)))
+  (test #f (<? default-comparator (make-foo) cons))
+  (test #f (<? default-comparator (make-bar) cons))
+
+  (define Foo-comparator (make-comparator foo? #t (lambda (a b) 0) #f))
+  (define Bar-comparator (make-comparator bar? #t (lambda (a b) 0) #f))
+
+  (register-default-comparator! Foo-comparator)
+  (register-default-comparator! Bar-comparator)
+
+  (test #t (<? default-comparator #u8() (make-foo)))
+  (test #t (<? default-comparator #u8() (make-bar)))
+  (test #t (=? default-comparator (make-foo) (make-foo)))
+  (test #f (=? default-comparator (make-foo) (make-bar)))
+  (test #t (=? default-comparator (make-bar) (make-bar)))
+  (test #f (=? default-comparator (make-foo) cons))
+  (test #f (=? default-comparator (make-bar) cons))
+  (test #t (<? default-comparator (make-foo) (make-bar))) ; implementation-specific ordering
+  (test #f (<? default-comparator (make-bar) (make-foo))) ; between registered types
+  (test #t (<? default-comparator (make-foo) cons))
+  (test #t (<? default-comparator (make-bar) cons)))
 
 (test-group "Comparator constructors"
   (test-group "make-comparator"
