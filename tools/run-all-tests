@@ -1,0 +1,4 @@
+#!/bin/sh
+set -ex
+
+chibi-scheme ./srfi-114/test/srfi-114-tests.scm
