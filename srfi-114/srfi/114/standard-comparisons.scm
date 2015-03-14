@@ -56,12 +56,16 @@
   (make-pair-comparison default-comparison default-comparison))
 
 (define (make-improper-list-comparison compare)
-  (define pair-comparison (make-pair-comparison compare compare))
-  (type-ordered-comparison-procedure (obj1 obj2)
-    (null? null-comparison)
-    (pair? pair-comparison)
-    (else
-      (compare obj1 obj2))))
+  (define (choose-improper-comparison obj)
+    (cond ((null? obj) (values 0 null-comparison))
+          ((pair? obj) (values 1 pair-comparison))
+          (else        (values 2 compare))))
+  (lambda (obj1 obj2)
+    (let-values (((obj1-order obj1-compare) (choose-improper-comparison obj1))
+                 ((obj2-order obj2-compare) (choose-improper-comparison obj2)))
+      (cond ((< obj1-order obj2-order) -1)
+            ((> obj1-order obj2-order) +1)
+            (else (obj1-compare obj1 obj2))))))
 
 
 ;; Lists ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

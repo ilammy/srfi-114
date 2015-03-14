@@ -81,6 +81,7 @@
 (test-group "The default comparator"
   ; TODO: extend default-comparator to sets and bags from SRFI 113
   (test #t (<? default-comparator '() '(a . d) '#false #\space "string" 'zorro 42 #(9) #u8() cons))
+  (test #t (>? default-comparator cons #u8() #(9) 42 'zorro "string" #\space '#false '(a . d) '()))
   (test #t (<? default-comparator '(a . 1) '(a . 2)))
   (test #f (<? default-comparator '(a . 1) '(a . 1)))
   (test #t (<? default-comparator '(a . 20) '(b . 3)))
@@ -292,7 +293,10 @@
     (define improper-comparator (make-improper-list-comparator default-comparator))
     (test #t (<? improper-comparator '() '(a . b) 1 2 3))
     (test #t (<? improper-comparator '(a . ()) '(a . b)))
-    (test #t (<? improper-comparator '(a b c) '(a b . c))))
+    (test #t (<? improper-comparator '(a b c) '(a b . c)))
+    (test #t (>? improper-comparator 3 2 1 '(a . b) '()))
+    (test #t (>? improper-comparator '(a . b) '(a . ())))
+    (test #t (>? improper-comparator '(a b . c) '(a b c))))
 
   (test-group "make-{selecting,refining,reverse}-comparator"
     ;; make-selecting-comparator
