@@ -1,4 +1,4 @@
-(define-library (srfi 114)
+(define-library (srfi 114 exported)
   (export comparator? comparator-comparison-procedure?
    comparator-hash-function? boolean-comparator char-comparator
    char-ci-comparator string-comparator string-ci-comparator
@@ -21,6 +21,19 @@
    make-comparison=/< make-comparison=/> make= make< make> make<= make>=
    if3 if=? if<? if>? if<=? if>=? if-not=? =? <? >? <=? >=?
    in-open-interval? in-closed-interval? in-open-closed-interval?
-   in-closed-open-interval?)
+   in-closed-open-interval? register-default-comparator!)
 
-  (import (srfi 114 exported)))
+  (import (scheme base)
+          (scheme case-lambda)
+          (scheme char)
+          (scheme complex)
+          (scheme inexact)
+          (only (srfi 69) hash hash-by-identity string-hash string-ci-hash))
+
+  (include "types.scm"
+           "default-comparator.scm"
+           "comparison-utils.scm"
+           "standard-comparisons.scm"
+           "standard-comparators.scm"
+           "constructors.scm"
+           "debug-comparator.scm"))

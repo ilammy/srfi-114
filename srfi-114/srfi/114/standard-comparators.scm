@@ -5,6 +5,9 @@
 
 ;; Standard comparators ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(define null-comparator
+  (make-comparator null? #t null-comparison hash-by-identity))
+
 (define boolean-comparator
   (make-comparator boolean? boolean=? boolean-comparison hash-by-identity))
 
