@@ -33,7 +33,7 @@
   (include "types.scm"
            "default-comparator.scm"
            "comparison-utils.scm"
-           "standard-comparisons.scm"
+           "standard-procedures.scm"
            "standard-comparators.scm"
            "constructors.scm"
            "debug-comparator.scm"))

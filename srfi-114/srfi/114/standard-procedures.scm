@@ -1,4 +1,4 @@
-;; standard-comparisons.scm -- standard comparison definitions and constructors
+;; standard-procedures.scm -- standard comparator procedures and constructors
 ;; Copyright (c) 2015 ilammy <a.lozovsky@gmail.com>
 ;; 3-clause BSD license: http://github.com/ilammy/srfi-114/blob/master/LICENSE
 
@@ -10,39 +10,76 @@
 
 ;; Primitive types ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(define (null-equality null1 null2) #t)
+
 (define (null-comparison null1 null2) 0)
+
+(define (boolean-equality bool1 bool2)
+  (eq? bool1 bool2))
 
 (define (boolean-comparison bool1 bool2)
   (if (eq? bool1 bool2) 0
       (if (eq? bool1 #f) -1 +1)))
 
+(define (char-equality char1 char2)
+  (char=? char1 char2))
+
 (define (char-comparison char1 char2)
   (if (char=? char1 char2) 0
       (if (char<? char1 char2) -1 +1)))
+
+(define (char-ci-equality char1 char2)
+  (char-ci=? char1 char2))
 
 (define (char-ci-comparison char1 char2)
   (if (char-ci=? char1 char2) 0
       (if (char-ci<? char1 char2) -1 +1)))
 
+(define (string-equality str1 str2)
+  (string=? str1 str2))
+
 (define (string-comparison str1 str2)
   (if (string=? str1 str2) 0
       (if (string<? str1 str2) -1 +1)))
+
+(define (string-ci-equality str1 str2)
+  (string-ci=? str1 str2))
 
 (define (string-ci-comparison str1 str2)
   (if (string-ci=? str1 str2) 0
       (if (string-ci<? str1 str2) -1 +1)))
 
+(define (symbol-equality sym1 sym2)
+  (symbol=? sym1 sym2))
+
 (define (symbol-comparison sym1 sym2)
   (if (symbol=? sym1 sym2) 0
       (if (string<? (symbol->string sym1) (symbol->string sym2)) -1 +1)))
+
+(define (real-number-equality num1 num2)
+  (= num1 num2))
 
 (define (real-number-comparison num1 num2)
   (if (= num1 num2) 0
       (if (< num1 num2) -1 +1)))
 
+(define (complex-number-equality num1 num2)
+  (= num1 num2))
+
 (define (complex-number-comparison num1 num2)
   (or= (real-number-comparison (real-part num1) (real-part num2))
        (real-number-comparison (imag-part num1) (imag-part num2))))
+
+
+;; Pair cars and cdrs ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define (make-car-comparison compare)
+  (lambda (pair1 pair2)
+    (compare (car pair1) (car pair2))))
+
+(define (make-cdr-comparison compare)
+  (lambda (pair1 pair2)
+    (compare (cdr pair1) (cdr pair2))))
 
 
 ;; Pairs ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -79,14 +79,6 @@
 
 ;; Pair comparators ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define (make-car-comparison compare)
-  (lambda (pair1 pair2)
-    (compare (car pair1) (car pair2))))
-
-(define (make-cdr-comparison compare)
-  (lambda (pair1 pair2)
-    (compare (cdr pair1) (cdr pair2))))
-
 (define (make-car-comparator comparator)
   (make-comparator pair? #t
     (make-car-comparison (comparator-comparison-procedure comparator))
