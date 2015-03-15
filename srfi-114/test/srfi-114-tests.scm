@@ -150,7 +150,23 @@
   (test #t (<? default-comparator (make-foo) (make-bar))) ; implementation-specific ordering
   (test #f (<? default-comparator (make-bar) (make-foo))) ; between registered types
   (test #t (<? default-comparator (make-foo) cons))
-  (test #t (<? default-comparator (make-bar) cons)))
+  (test #t (<? default-comparator (make-bar) cons))
+
+  (define procedure-comparator
+    (make-comparator procedure?
+      (lambda (proc-a proc-b) (eqv? proc-a proc-b))
+      #f #f))
+
+  (register-default-comparator! procedure-comparator)
+
+  (test #t (=? default-comparator cons cons))
+  (test #f (=? default-comparator car cdr))
+  (test #t (=? default-comparator (cons cons cons) (cons cons cons)))
+  (test #f (=? default-comparator (cons car cdr) (cons cdr car)))
+  (test #t (=? default-comparator (list cons car cdr) (list cons car cdr)))
+  (test #f (=? default-comparator (list cons car cdr) (list list + -)))
+  (test #t (=? default-comparator (vector cons car cdr) (vector cons car cdr)))
+  (test #f (=? default-comparator (vector cons car cdr) (vector list + -))))
 
 (test-group "Comparator constructors"
   (test-group "make-comparator"
@@ -276,6 +292,29 @@
     (test #t (=? inverse-bytevector-comparator #u8(1 2 3) #u8(1 2 3)))
     (test #f (<? inverse-bytevector-comparator #u8(1 2 3) #u8(1 2 4)))
 
+    (define equal-only-number-comparator     (make-comparator number? = #f #f))
+    (define equal-only-list-comparator       (make-list-comparator       equal-only-number-comparator))
+    (define equal-only-vector-comparator     (make-vector-comparator     equal-only-number-comparator))
+    (define equal-only-bytevector-comparator (make-bytevector-comparator equal-only-number-comparator))
+    (test #t (=? equal-only-list-comparator '() '()))
+    (test #f (=? equal-only-list-comparator '() '(1 2 3)))
+    (test #f (=? equal-only-list-comparator '(1 2 3) '(4 5 6)))
+    (test #t (=? equal-only-list-comparator '(1 2 3) '(1 2 3)))
+    (test #f (=? equal-only-list-comparator '(1 2 3) '(1 2 3 4)))
+    (test #f (=? equal-only-list-comparator '(1 2 3) '(1 2 6)))
+    (test #t (=? equal-only-vector-comparator #()      #()))
+    (test #f (=? equal-only-vector-comparator #()      #(1 2 3)))
+    (test #f (=? equal-only-vector-comparator #(1 2 3) #(4 5 6)))
+    (test #t (=? equal-only-vector-comparator #(1 2 3) #(1 2 3)))
+    (test #f (=? equal-only-vector-comparator #(1 2 3) #(1 2 3 4)))
+    (test #f (=? equal-only-vector-comparator #(1 2 3) #(1 2 6)))
+    (test #t (=? equal-only-bytevector-comparator #u8()      #u8()))
+    (test #f (=? equal-only-bytevector-comparator #u8()      #u8(1 2 3)))
+    (test #f (=? equal-only-bytevector-comparator #u8(1 2 3) #u8(4 5 6)))
+    (test #t (=? equal-only-bytevector-comparator #u8(1 2 3) #u8(1 2 3)))
+    (test #f (=? equal-only-bytevector-comparator #u8(1 2 3) #u8(1 2 3 4)))
+    (test #f (=? equal-only-bytevector-comparator #u8(1 2 3) #u8(1 2 6)))
+
     (define element-comparator default-comparator)
 
     (define (vector-type?  vec) (vector? vec))
@@ -296,7 +335,23 @@
     (test #t (<? list-as-vector-comparator '()      '(1 2 3)))
     (test #t (<? list-as-vector-comparator '(6 6)   '(1 1 1)))
     (test #t (=? list-as-vector-comparator '(1 2 3) '(1 2 3)))
-    (test #t (<? list-as-vector-comparator '(1 2 3) '(1 2 4))))
+    (test #t (<? list-as-vector-comparator '(1 2 3) '(1 2 4)))
+
+    (define equal-only-vector-as-list-comparator (make-listwise-comparator vector-type? equal-only-number-comparator vector-empty? vector-head vector-tail))
+    (test #t (=? equal-only-vector-as-list-comparator #() #()))
+    (test #f (=? equal-only-vector-as-list-comparator #() #(1 2 3)))
+    (test #f (=? equal-only-vector-as-list-comparator #(1 2 3) #(4 5 6)))
+    (test #t (=? equal-only-vector-as-list-comparator #(1 2 3) #(1 2 3)))
+    (test #f (=? equal-only-vector-as-list-comparator #(1 2 3) #(1 2 3 4)))
+    (test #f (=? equal-only-vector-as-list-comparator #(1 2 3) #(1 2 6)))
+
+    (define equal-only-list-as-vector-comparator (make-vectorwise-comparator list-type? equal-only-number-comparator list-length list-ref))
+    (test #t (=? equal-only-list-as-vector-comparator '()      '()))
+    (test #f (=? equal-only-list-as-vector-comparator '()      '(1 2 3)))
+    (test #f (=? equal-only-list-as-vector-comparator '(1 2 3) '(4 5 6)))
+    (test #t (=? equal-only-list-as-vector-comparator '(1 2 3) '(1 2 3)))
+    (test #f (=? equal-only-list-as-vector-comparator '(1 2 3) '(1 2 3 4)))
+    (test #f (=? equal-only-list-as-vector-comparator '(1 2 3) '(1 2 6))))
 
   (test-group "make-{car,cdr,pair,improper-list}-comparator"
     (define symbol-car-comparator (make-car-comparator symbol-comparator))
@@ -308,6 +363,19 @@
     (test #t (<? number-cdr-comparator '(x . 1) '(a . 2)))
     (test #f (<? number-cdr-comparator '(a . 1) '(a . 1)))
     (test #f (<? number-cdr-comparator '(a . 20) '(b . 3)))
+
+    (define equal-only-symbol-comparator (make-comparator symbol? eq? #f #f))
+    (define equal-only-symbol-car-comparator (make-car-comparator equal-only-symbol-comparator))
+    (test #t (=? equal-only-symbol-car-comparator '(a . 1) '(a . 2)))
+    (test #t (=? equal-only-symbol-car-comparator '(a . 1) '(a . 1)))
+    (test #f (=? equal-only-symbol-car-comparator '(a . 20) '(b . 3)))
+
+    (define equal-only-number-comparator (make-comparator number? = #f #f))
+    (define equal-only-number-cdr-comparator (make-cdr-comparator equal-only-number-comparator))
+    (test #f (=? equal-only-number-cdr-comparator '(x . 1) '(a . 2)))
+    (test #t (=? equal-only-number-cdr-comparator '(a . 1) '(a . 1)))
+    (test #t (=? equal-only-number-cdr-comparator '(a . 1) '(b . 1)))
+    (test #f (=? equal-only-number-cdr-comparator '(a . 20) '(b . 3)))
 
     (define (obersymbol-comparator obersymbol)
       (define (total-order s1 s2)
@@ -323,13 +391,29 @@
     (test #t (<? special-pair-comparator '(x . b) '(x . y)))
     (test #t (>? special-pair-comparator '(a . y) '(a . x)))
 
+    (define equal-only-symbol/number-pair-comparator (make-pair-comparator equal-only-symbol-comparator equal-only-number-comparator))
+    (test #t (=? equal-only-symbol/number-pair-comparator '(a . 1) '(a . 1)))
+    (test #f (=? equal-only-symbol/number-pair-comparator '(a . 1) '(a . 2)))
+    (test #f (=? equal-only-symbol/number-pair-comparator '(a . 1) '(b . 2)))
+    (test #f (=? equal-only-symbol/number-pair-comparator '(a . 1) '(b . 1)))
+
     (define improper-comparator (make-improper-list-comparator default-comparator))
     (test #t (<? improper-comparator '() '(a . b) 1 2 3))
     (test #t (<? improper-comparator '(a . ()) '(a . b)))
     (test #t (<? improper-comparator '(a b c) '(a b . c)))
     (test #t (>? improper-comparator 3 2 1 '(a . b) '()))
     (test #t (>? improper-comparator '(a . b) '(a . ())))
-    (test #t (>? improper-comparator '(a b . c) '(a b c))))
+    (test #t (>? improper-comparator '(a b . c) '(a b c)))
+
+    ; Make sure that the wrapped comparator can compare both elements and pairs
+    (define equal-only-improper-comparator (make-improper-list-comparator equal-comparator))
+    (test #t (=? equal-only-improper-comparator '() '()))
+    (test #t (=? equal-only-improper-comparator 'foo 'foo))
+    (test #t (=? equal-only-improper-comparator '(foo bar) '(foo bar)))
+    (test #t (=? equal-only-improper-comparator '(foo . bar) '(foo . bar)))
+    (test #f (=? equal-only-improper-comparator 'foo 'bar))
+    (test #f (=? equal-only-improper-comparator '(foo bar) '(foo zog)))
+    (test #f (=? equal-only-improper-comparator '(oops . bar) '(foo . bar))))
 
   (test-group "make-{selecting,refining,reverse}-comparator"
     ;; make-selecting-comparator

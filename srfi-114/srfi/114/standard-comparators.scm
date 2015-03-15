@@ -45,16 +45,16 @@
   (make-comparator number? complex-number-equality complex-number-comparison hash))
 
 (define pair-comparator
-  (make-comparator pair? #t pair-comparison hash))
+  (make-comparator pair? pair-equality pair-comparison hash))
 
 (define list-comparator
-  (make-comparator list? #t list-comparison hash))
+  (make-comparator list? list-equality list-comparison hash))
 
 (define vector-comparator
-  (make-comparator vector? #t vector-comparison hash))
+  (make-comparator vector? vector-equality vector-comparison hash))
 
 (define bytevector-comparator
-  (make-comparator bytevector? #t bytevector-comparison hash))
+  (make-comparator bytevector? bytevector-equality bytevector-comparison hash))
 
 
 ;; Wrapped equality predicates ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
