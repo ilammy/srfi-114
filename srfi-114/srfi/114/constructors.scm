@@ -39,7 +39,7 @@
 (define (make-inexact-real-comparator epsilon rounding nan-handling)
   (make-comparator number? #t
     (make-inexact-real-comparison epsilon rounding nan-handling)
-    srfi-69:hash))
+    real-number-hash))
 
 
 ;; Collection comparators ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

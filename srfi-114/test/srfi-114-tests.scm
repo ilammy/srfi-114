@@ -76,7 +76,12 @@
   (test #t (<? bytevector-comparator #u8()      #u8(1 2 3)))
   (test #t (<? bytevector-comparator #u8(6 6)   #u8(1 1 1)))
   (test #t (=? bytevector-comparator #u8(1 2 3) #u8(1 2 3)))
-  (test #t (<? bytevector-comparator #u8(1 2 3) #u8(1 2 4))))
+  (test #t (<? bytevector-comparator #u8(1 2 3) #u8(1 2 4)))
+
+  (test #t (= (comparator-hash char-ci-comparator #\a)
+              (comparator-hash char-ci-comparator #\A)))
+  (test #t (= (comparator-hash string-ci-comparator "FooBar")
+              (comparator-hash string-ci-comparator "foobar"))))
 
 (test-group "The default comparator"
   (test #t (<? default-comparator '() '(a . d) '#false #\space "string" 'zorro 42 #(9) #u8() cons))

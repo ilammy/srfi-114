@@ -6,43 +6,43 @@
 ;; Standard comparators ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define null-comparator
-  (make-comparator null? null-equality null-comparison srfi-69:hash-by-identity))
+  (make-comparator null? null-equality null-comparison null-hash))
 
 (define boolean-comparator
-  (make-comparator boolean? boolean-equality boolean-comparison srfi-69:hash-by-identity))
+  (make-comparator boolean? boolean-equality boolean-comparison boolean-hash))
 
 (define char-comparator
-  (make-comparator char? char-equality char-comparison srfi-69:hash))
+  (make-comparator char? char-equality char-comparison char-hash))
 
 (define char-ci-comparator
-  (make-comparator char? char-ci-equality char-ci-comparison srfi-69:hash))
+  (make-comparator char? char-ci-equality char-ci-comparison char-ci-hash))
 
 (define string-comparator
-  (make-comparator string? string-equality string-comparison srfi-69:string-hash))
+  (make-comparator string? string-equality string-comparison string-hash))
 
 (define string-ci-comparator
-  (make-comparator string? string-ci-equality string-ci-comparison srfi-69:string-ci-hash))
+  (make-comparator string? string-ci-equality string-ci-comparison string-ci-hash))
 
 (define symbol-comparator
-  (make-comparator symbol? symbol-equality symbol-comparison srfi-69:hash-by-identity))
+  (make-comparator symbol? symbol-equality symbol-comparison symbol-hash))
 
 (define exact-integer-comparator
-  (make-comparator exact-integer? real-number-equality real-number-comparison srfi-69:hash))
+  (make-comparator exact-integer? real-number-equality real-number-comparison real-number-hash))
 
 (define integer-comparator
-  (make-comparator integer? real-number-equality real-number-comparison srfi-69:hash))
+  (make-comparator integer? real-number-equality real-number-comparison real-number-hash))
 
 (define rational-comparator
-  (make-comparator rational? real-number-equality real-number-comparison srfi-69:hash))
+  (make-comparator rational? real-number-equality real-number-comparison real-number-hash))
 
 (define real-comparator
-  (make-comparator real? real-number-equality real-number-comparison srfi-69:hash))
+  (make-comparator real? real-number-equality real-number-comparison real-number-hash))
 
 (define complex-comparator
-  (make-comparator complex? complex-number-equality complex-number-comparison srfi-69:hash))
+  (make-comparator complex? complex-number-equality complex-number-comparison complex-number-hash))
 
 (define number-comparator
-  (make-comparator number? complex-number-equality complex-number-comparison srfi-69:hash))
+  (make-comparator number? complex-number-equality complex-number-comparison complex-number-hash))
 
 (define pair-comparator
   (make-comparator pair? pair-equality pair-comparison srfi-69:hash))

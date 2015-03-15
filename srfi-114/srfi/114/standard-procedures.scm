@@ -14,12 +14,18 @@
 
 (define (null-comparison null1 null2) 0)
 
+(define (null-hash null)
+  (srfi-69:hash-by-identity null))
+
 (define (boolean-equality bool1 bool2)
   (eq? bool1 bool2))
 
 (define (boolean-comparison bool1 bool2)
   (if (eq? bool1 bool2) 0
       (if (eq? bool1 #f) -1 +1)))
+
+(define (boolean-hash bool)
+  (srfi-69:hash-by-identity bool))
 
 (define (char-equality char1 char2)
   (char=? char1 char2))
@@ -28,12 +34,18 @@
   (if (char=? char1 char2) 0
       (if (char<? char1 char2) -1 +1)))
 
+(define (char-hash char)
+  (srfi-69:hash char))
+
 (define (char-ci-equality char1 char2)
   (char-ci=? char1 char2))
 
 (define (char-ci-comparison char1 char2)
   (if (char-ci=? char1 char2) 0
       (if (char-ci<? char1 char2) -1 +1)))
+
+(define (char-ci-hash char)
+  (srfi-69:hash (char-foldcase char)))
 
 (define (string-equality str1 str2)
   (string=? str1 str2))
@@ -42,12 +54,18 @@
   (if (string=? str1 str2) 0
       (if (string<? str1 str2) -1 +1)))
 
+(define (string-hash str)
+  (srfi-69:string-hash str))
+
 (define (string-ci-equality str1 str2)
   (string-ci=? str1 str2))
 
 (define (string-ci-comparison str1 str2)
   (if (string-ci=? str1 str2) 0
       (if (string-ci<? str1 str2) -1 +1)))
+
+(define (string-ci-hash str)
+  (srfi-69:string-ci-hash str))
 
 (define (symbol-equality sym1 sym2)
   (symbol=? sym1 sym2))
@@ -56,6 +74,9 @@
   (if (symbol=? sym1 sym2) 0
       (if (string<? (symbol->string sym1) (symbol->string sym2)) -1 +1)))
 
+(define (symbol-hash sym)
+  (srfi-69:hash-by-identity sym))
+
 (define (real-number-equality num1 num2)
   (= num1 num2))
 
@@ -63,12 +84,18 @@
   (if (= num1 num2) 0
       (if (< num1 num2) -1 +1)))
 
+(define (real-number-hash num)
+  (srfi-69:hash num))
+
 (define (complex-number-equality num1 num2)
   (= num1 num2))
 
 (define (complex-number-comparison num1 num2)
   (or= (real-number-comparison (real-part num1) (real-part num2))
        (real-number-comparison (imag-part num1) (imag-part num2))))
+
+(define (complex-number-hash num)
+  (srfi-69:hash num))
 
 
 ;; Pair cars and cdrs ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
