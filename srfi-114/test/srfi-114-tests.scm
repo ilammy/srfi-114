@@ -413,7 +413,14 @@
     (test #t (=? equal-only-improper-comparator '(foo . bar) '(foo . bar)))
     (test #f (=? equal-only-improper-comparator 'foo 'bar))
     (test #f (=? equal-only-improper-comparator '(foo bar) '(foo zog)))
-    (test #f (=? equal-only-improper-comparator '(oops . bar) '(foo . bar))))
+    (test #f (=? equal-only-improper-comparator '(oops . bar) '(foo . bar)))
+
+    (define special-improper-comparator (make-improper-list-comparator (obersymbol-comparator 'a)))
+    (test #t (<? special-improper-comparator '(b . c) '(b . d)))
+    (test #t (<? special-improper-comparator '(b . c) '(c . a)))
+    (test #t (<? special-improper-comparator '(b . c) '(c . a)))
+    (test #f (<? special-improper-comparator '(a . b) '(c . d)))
+    (test #f (<? special-improper-comparator '(a . a) '(a . d))))
 
   (test-group "make-{selecting,refining,reverse}-comparator"
     ;; make-selecting-comparator

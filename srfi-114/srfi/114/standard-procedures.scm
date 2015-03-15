@@ -109,6 +109,7 @@
   (make-pair-comparison default-comparison default-comparison))
 
 (define (make-improper-list-equality equal?)
+  (define pair-equality (make-pair-equality equal? equal?))
   (define (choose-improper-equality obj)
     (cond ((null? obj) (values 0 null-equality))
           ((pair? obj) (values 1 pair-equality))
@@ -121,6 +122,7 @@
           #f))))
 
 (define (make-improper-list-comparison compare)
+  (define pair-comparison (make-pair-comparison compare compare))
   (define (choose-improper-comparison obj)
     (cond ((null? obj) (values 0 null-comparison))
           ((pair? obj) (values 1 pair-comparison))
