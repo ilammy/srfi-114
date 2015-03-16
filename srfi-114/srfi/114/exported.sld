@@ -28,6 +28,7 @@
           (scheme char)
           (scheme complex)
           (scheme inexact)
+          (only (srfi 60) bitwise-xor)
           (prefix
             (only (srfi 69) hash hash-by-identity string-hash string-ci-hash)
             srfi-69:))

@@ -116,6 +116,14 @@
   (lambda (pair1 pair2)
     (compare (cdr pair1) (cdr pair2))))
 
+(define (make-car-hash hash)
+  (lambda (pair)
+    (hash (car pair))))
+
+(define (make-cdr-hash hash)
+  (lambda (pair)
+    (hash (cdr pair))))
+
 
 ;; Pairs ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -129,11 +137,18 @@
     (or= (compare-cars (car pair1) (car pair2))
          (compare-cdrs (cdr pair1) (cdr pair2)))))
 
+(define (make-pair-hash hash-car hash-cdr)
+  (lambda (pair)
+    (bitwise-xor (hash-car (car pair)) (hash-cdr (cdr pair)))))
+
 (define pair-equality
   (make-pair-equality default-equality default-equality))
 
 (define pair-comparison
   (make-pair-comparison default-comparison default-comparison))
+
+(define pair-hash
+  (make-pair-hash default-hash default-hash))
 
 (define (make-improper-list-equality equal?)
   (define pair-equality (make-pair-equality equal? equal?))
@@ -161,6 +176,13 @@
             ((> obj1-order obj2-order) +1)
             (else (obj1-compare obj1 obj2))))))
 
+(define (make-improper-list-hash hash)
+  (define pair-hash (make-pair-hash hash hash))
+  (lambda (obj)
+    (cond ((null? obj) (null-hash obj))
+          ((pair? obj) (pair-hash obj))
+          (else        (hash obj)))))
+
 
 ;; Lists ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -182,17 +204,35 @@
                  (compare-lists (tail list1) (tail list2))))))
   compare-lists)
 
+(define (make-listwise-hash hash-head empty? head tail)
+  (define max-length 32)
+  (define initial-value 42)
+  (define (hash-list list)
+    (let loop ((list list) (i 0)
+               (result initial-value))
+      (if (or (empty? list) (= i max-length))
+          result
+          (loop (tail list) (+ 1 i)
+                (bitwise-xor result (hash-head (head list)))))))
+  hash-list)
+
 (define (make-list-equality equal-heads?)
   (make-listwise-equality equal-heads? null? car cdr))
 
 (define (make-list-comparison compare-heads)
   (make-listwise-comparison compare-heads null? car cdr))
 
+(define (make-list-hash hash-head)
+  (make-listwise-hash hash-head null? car cdr))
+
 (define list-equality
   (make-list-equality default-equality))
 
 (define list-comparison
   (make-list-comparison default-comparison))
+
+(define list-hash
+  (make-list-hash default-hash))
 
 
 ;; Vectors ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -215,11 +255,25 @@
                (or= (compare (ref vec1 i) (ref vec2 i))
                     (loop (+ 1 i)))))))))
 
+(define (make-vectorwise-hash hash length ref)
+  (define max-length 32)
+  (define initial-value 9)
+  (lambda (vec)
+    (let ((max-length (min (length vec) max-length)))
+      (let loop ((i 0)
+                 (result (+ initial-value (length vec))))
+        (if (= i max-length)
+            result
+            (loop (+ 1 i) (bitwise-xor result (hash (ref vec i)))))))))
+
 (define (make-vector-equality equal?)
   (make-vectorwise-equality equal? vector-length vector-ref))
 
 (define (make-vector-comparison compare)
   (make-vectorwise-comparison compare vector-length vector-ref))
+
+(define (make-vector-hash hash)
+  (make-vectorwise-hash hash vector-length vector-ref))
 
 (define vector-equality
   (make-vector-equality default-equality))
@@ -227,14 +281,23 @@
 (define vector-comparison
   (make-vector-comparison default-comparison))
 
+(define vector-hash
+  (make-vector-hash default-hash))
+
 (define (make-bytevector-equality equal?)
   (make-vectorwise-equality equal? bytevector-length bytevector-u8-ref))
 
 (define (make-bytevector-comparison compare)
   (make-vectorwise-comparison compare bytevector-length bytevector-u8-ref))
 
+(define (make-bytevector-hash hash)
+  (make-vectorwise-hash hash bytevector-length bytevector-u8-ref))
+
 (define bytevector-equality
   (make-bytevector-equality real-number-equality))
 
 (define bytevector-comparison
   (make-bytevector-comparison real-number-comparison))
+
+(define bytevector-hash
+  (make-bytevector-hash real-number-hash))

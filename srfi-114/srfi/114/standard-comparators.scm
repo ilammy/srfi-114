@@ -45,16 +45,16 @@
   (make-comparator number? complex-number-equality complex-number-comparison complex-number-hash))
 
 (define pair-comparator
-  (make-comparator pair? pair-equality pair-comparison srfi-69:hash))
+  (make-comparator pair? pair-equality pair-comparison pair-hash))
 
 (define list-comparator
-  (make-comparator list? list-equality list-comparison srfi-69:hash))
+  (make-comparator list? list-equality list-comparison list-hash))
 
 (define vector-comparator
-  (make-comparator vector? vector-equality vector-comparison srfi-69:hash))
+  (make-comparator vector? vector-equality vector-comparison vector-hash))
 
 (define bytevector-comparator
-  (make-comparator bytevector? bytevector-equality bytevector-comparison srfi-69:hash))
+  (make-comparator bytevector? bytevector-equality bytevector-comparison bytevector-hash))
 
 
 ;; Wrapped equality predicates ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
