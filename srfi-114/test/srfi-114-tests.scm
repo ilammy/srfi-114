@@ -625,3 +625,5 @@
   (test 'z (comparator-max symbol-comparator 'x 'y 'z)))
 
 (test-end)
+
+(test-exit)
