@@ -4,7 +4,7 @@ This is an implementation of [SRFI 114 'Comparators'](//srfi.schemers.org/srfi-1
 
 ## Running
 
-For development I use [Chibi Scheme](//code.google.com/p/chibi-scheme) (the latest build from Mercurial trunk).
+For development I use [Chibi Scheme](//github.com/ashinn/chibi-scheme) (the latest build from Git master).
 
 ## Extending
 
