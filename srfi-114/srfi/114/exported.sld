@@ -28,7 +28,9 @@
           (scheme char)
           (scheme complex)
           (scheme inexact)
-          (only (srfi 69) hash hash-by-identity string-hash string-ci-hash))
+          (prefix
+            (only (srfi 69) hash hash-by-identity string-hash string-ci-hash)
+            srfi-69:))
 
   (include "types.scm"
            "default-comparator.scm"

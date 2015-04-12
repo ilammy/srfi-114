@@ -39,7 +39,7 @@
 (define (make-inexact-real-comparator epsilon rounding nan-handling)
   (make-comparator number? #t
     (make-inexact-real-comparison epsilon rounding nan-handling)
-    hash))
+    srfi-69:hash))
 
 
 ;; Collection comparators ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -50,7 +50,7 @@
       (comparator-equality-predicate element-comparator))
     (make-list-comparison
       (comparator-comparison-procedure element-comparator))
-    hash))
+    srfi-69:hash))
 
 (define (make-vector-comparator element-comparator)
   (make-comparator vector?
@@ -58,7 +58,7 @@
       (comparator-equality-predicate element-comparator))
     (make-vector-comparison
       (comparator-comparison-procedure element-comparator))
-    hash))
+    srfi-69:hash))
 
 (define (make-bytevector-comparator element-comparator)
   (make-comparator bytevector?
@@ -66,7 +66,7 @@
       (comparator-equality-predicate element-comparator))
     (make-bytevector-comparison
       (comparator-comparison-procedure element-comparator))
-    hash))
+    srfi-69:hash))
 
 (define (make-listwise-comparator type-test element-comparator empty? head tail)
   (make-comparator type-test
@@ -76,7 +76,7 @@
     (make-listwise-comparison
       (comparator-comparison-procedure element-comparator)
       empty? head tail)
-    hash))
+    srfi-69:hash))
 
 (define (make-vectorwise-comparator type-test element-comparator length ref)
   (make-comparator type-test
@@ -86,7 +86,7 @@
     (make-vectorwise-comparison
       (comparator-comparison-procedure element-comparator)
       length ref)
-    hash))
+    srfi-69:hash))
 
 
 ;; Pair comparators ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -95,13 +95,13 @@
   (make-comparator pair?
     (make-car-equality (comparator-equality-predicate comparator))
     (make-car-comparison (comparator-comparison-procedure comparator))
-    (lambda (pair) (hash (car pair)))))
+    (lambda (pair) (srfi-69:hash (car pair)))))
 
 (define (make-cdr-comparator comparator)
   (make-comparator pair?
     (make-cdr-equality (comparator-equality-predicate comparator))
     (make-cdr-comparison (comparator-comparison-procedure comparator))
-    (lambda (pair) (hash (cdr pair)))))
+    (lambda (pair) (srfi-69:hash (cdr pair)))))
 
 (define (make-pair-comparator car-comparator cdr-comparator)
   (make-comparator pair?
@@ -111,7 +111,7 @@
     (make-pair-comparison
       (comparator-comparison-procedure car-comparator)
       (comparator-comparison-procedure cdr-comparator))
-    hash))
+    srfi-69:hash))
 
 (define (make-improper-list-comparator element-comparator)
   (make-comparator #t
