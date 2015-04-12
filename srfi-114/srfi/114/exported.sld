@@ -28,12 +28,15 @@
           (scheme char)
           (scheme complex)
           (scheme inexact)
-          (only (srfi 69) hash hash-by-identity string-hash string-ci-hash))
+          (only (srfi 60) bitwise-xor)
+          (prefix
+            (only (srfi 69) hash hash-by-identity string-hash string-ci-hash)
+            srfi-69:))
 
   (include "types.scm"
            "default-comparator.scm"
            "comparison-utils.scm"
-           "standard-comparisons.scm"
+           "standard-procedures.scm"
            "standard-comparators.scm"
            "constructors.scm"
            "debug-comparator.scm"))

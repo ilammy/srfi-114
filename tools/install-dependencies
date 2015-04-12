@@ -1,0 +1,13 @@
+#!/bin/sh
+set -ex
+
+[ -z $SRFI_60_FORK ]   && SRFI_60_FORK=ilammy/srfi-60
+[ -z $SRFI_60_BRANCH ] && SRFI_60_BRANCH=v1.0.0
+
+cd /tmp/scratch
+git clone --depth 50 --branch $SRFI_60_BRANCH -- https://github.com/$SRFI_60_FORK srfi-60
+
+cd srfi-60
+./tools/make-snowball
+
+snow-chibi --ignore-sig install srfi-60.tgz

@@ -6,59 +6,59 @@
 ;; Standard comparators ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define null-comparator
-  (make-comparator null? #t null-comparison hash-by-identity))
+  (make-comparator null? null-equality null-comparison null-hash))
 
 (define boolean-comparator
-  (make-comparator boolean? boolean=? boolean-comparison hash-by-identity))
+  (make-comparator boolean? boolean-equality boolean-comparison boolean-hash))
 
 (define char-comparator
-  (make-comparator char? char=? char-comparison hash))
+  (make-comparator char? char-equality char-comparison char-hash))
 
 (define char-ci-comparator
-  (make-comparator char? char-ci=? char-ci-comparison hash))
+  (make-comparator char? char-ci-equality char-ci-comparison char-ci-hash))
 
 (define string-comparator
-  (make-comparator string? string=? string-comparison string-hash))
+  (make-comparator string? string-equality string-comparison string-hash))
 
 (define string-ci-comparator
-  (make-comparator string? string-ci=? string-ci-comparison string-ci-hash))
+  (make-comparator string? string-ci-equality string-ci-comparison string-ci-hash))
 
 (define symbol-comparator
-  (make-comparator symbol? symbol=? symbol-comparison hash-by-identity))
+  (make-comparator symbol? symbol-equality symbol-comparison symbol-hash))
 
 (define exact-integer-comparator
-  (make-comparator exact-integer? = real-number-comparison hash))
+  (make-comparator exact-integer? real-number-equality real-number-comparison real-number-hash))
 
 (define integer-comparator
-  (make-comparator integer? = real-number-comparison hash))
+  (make-comparator integer? real-number-equality real-number-comparison real-number-hash))
 
 (define rational-comparator
-  (make-comparator rational? = real-number-comparison hash))
+  (make-comparator rational? real-number-equality real-number-comparison real-number-hash))
 
 (define real-comparator
-  (make-comparator real? = real-number-comparison hash))
+  (make-comparator real? real-number-equality real-number-comparison real-number-hash))
 
 (define complex-comparator
-  (make-comparator complex? = complex-number-comparison hash))
+  (make-comparator complex? complex-number-equality complex-number-comparison complex-number-hash))
 
 (define number-comparator
-  (make-comparator number? = complex-number-comparison hash))
+  (make-comparator number? complex-number-equality complex-number-comparison complex-number-hash))
 
 (define pair-comparator
-  (make-comparator pair? #t pair-comparison hash))
+  (make-comparator pair? pair-equality pair-comparison pair-hash))
 
 (define list-comparator
-  (make-comparator list? #t list-comparison hash))
+  (make-comparator list? list-equality list-comparison list-hash))
 
 (define vector-comparator
-  (make-comparator vector? #t vector-comparison hash))
+  (make-comparator vector? vector-equality vector-comparison vector-hash))
 
 (define bytevector-comparator
-  (make-comparator bytevector? #t bytevector-comparison hash))
+  (make-comparator bytevector? bytevector-equality bytevector-comparison bytevector-hash))
 
 
 ;; Wrapped equality predicates ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define eq-comparator    (make-comparator #t eq?    #f hash-by-identity))
-(define eqv-comparator   (make-comparator #t eqv?   #f hash))
-(define equal-comparator (make-comparator #t equal? #f hash))
+(define eq-comparator    (make-comparator #t eq?    #f srfi-69:hash-by-identity))
+(define eqv-comparator   (make-comparator #t eqv?   #f srfi-69:hash))
+(define equal-comparator (make-comparator #t equal? #f srfi-69:hash))
