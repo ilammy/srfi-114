@@ -1,11 +1,6 @@
 #!/bin/sh
 set -ex
 
-chibi_install_dir=/usr/local/share/chibi
+./tools/make-snowball
 
-sudo mkdir $chibi_install_dir/srfi/114
-
-sudo install --mode=0644 $(find ./srfi-114/srfi     -maxdepth 1 -type f) $chibi_install_dir/srfi
-sudo install --mode=0644 $(find ./srfi-114/srfi/114 -maxdepth 1 -type f) $chibi_install_dir/srfi/114
-
-sudo chown --recursive root $chibi_install_dir/srfi/114
+snow-chibi --ignore-sig install srfi-114.tgz
