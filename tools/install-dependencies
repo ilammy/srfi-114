@@ -10,4 +10,4 @@ git clone --depth 50 --branch $SRFI_60_BRANCH -- https://github.com/$SRFI_60_FOR
 cd srfi-60
 ./tools/make-snowball
 
-snow-chibi --ignore-sig install srfi-60.tgz
+snow-chibi --ignore-sig --ignore-digest install srfi-60.tgz
