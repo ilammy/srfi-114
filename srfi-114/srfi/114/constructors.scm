@@ -182,6 +182,10 @@
   (then (hash) (hash obj))
   (else (error "selecting-comparator: unsupported object type" obj)))
 
+(define-type-refining-combination (make-refining-type-test-procedure obj)
+  (then () #t)
+  (else #f))
+
 (define-type-refining-combination (make-refining-equality-predicate obj1 obj2)
   (next (equality-met? #f))
   (then (equal?)
@@ -229,10 +233,10 @@
       (with-decomposed-comparators (cons comparator comparators)
         (lambda (type-tests equalities comparisons hashes)
           (make-comparator
-            (make-selecting-type-test-procedure type-tests)
+            (make-refining-type-test-procedure  type-tests)
             (make-refining-equality-predicate   type-tests equalities)
             (make-refining-comparison-procedure type-tests comparisons)
-            (make-selecting-hash-function       type-tests hashes))))))
+            (make-refining-hash-function        type-tests hashes))))))
 
 
 ;; Reverse comparators ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

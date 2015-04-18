@@ -37,7 +37,7 @@
   (make-comparator #t
     (lambda (a b) #t)
     (lambda (a b) 0)
-    srfi-69:hash))
+    (lambda (obj) 0)))
 
 ; This procedure defines the default ordering of objects by their types. Objects
 ; of known primitive types have strict order between them. Objects of registered
