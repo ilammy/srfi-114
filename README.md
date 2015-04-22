@@ -1,4 +1,4 @@
-# SRFI 114 'Comparators'
+# SRFI 114 'Comparators' [![Build Status](https://travis-ci.org/ilammy/srfi-114.svg?branch=master)](https://travis-ci.org/ilammy/srfi-114)
 
 This is an implementation of [SRFI 114 'Comparators'](//srfi.schemers.org/srfi-114/srfi-114.html) for R7RS-compliant Schemes.
 
@@ -11,7 +11,7 @@ then by Snow package manager.
 
 ## Extending
 
-See [this file](srfi-114/docs/extending.md) to see how to extend `default-comparator` with custom types.
+Read [docs/extending.md](srfi-114/docs/extending.md) on how to extend `default-comparator` with custom types.
 
 ## Licensing
 
